@@ -6,9 +6,10 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_google_genai import ChatGoogleGenerativeAI
 # Import Ollama fetches here - might last longer than Gemini
+from langchain_ollama import ChatOllama
 from pydantic_core.core_schema import model_field
 from langchain.tools import tool
-from langchain.agents import create_openai_tools_agent,  AgentExecutor
+from langchain.agents import AgentExecutor, create_tool_calling_agent
 from todoist_api_python.api import TodoistAPI
 
 load_dotenv()
@@ -45,6 +46,17 @@ llm = ChatGoogleGenerativeAI(
     temperature=0.3  # closer to 0 is more deterministic, higher values are more creative
 )
 
+llm_ollama_local = ChatOllama(
+    model="qwen2.5:14b",
+    temperature=0.3
+)
+
+llm_ollama_cloud = ChatOllama(
+    model="qwen2.5:14b",
+    base_url="https://api.ollama.com",
+    temperature=0.3
+)
+
 #system_prompt = "You are a philosopher and life coach. You will help me understand myself better."
 system_prompt = """You are a helpful assistant.
 You will help the user add tasks.
@@ -59,7 +71,7 @@ prompt = ChatPromptTemplate([
 ])
 
 # chain = prompt | llm | StrOutputParser()
-agent = create_openai_tools_agent(llm, tools, prompt)
+agent = create_openai_tools_agent(llm_ollama_local, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False)
 
 #response = chain.invoke({"input":user_input})
