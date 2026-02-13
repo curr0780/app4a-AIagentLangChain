@@ -5,6 +5,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_google_genai import ChatGoogleGenerativeAI
+# Import Ollama fetches here - might last longer than Gemini
 from pydantic_core.core_schema import model_field
 from langchain.tools import tool
 from langchain.agents import create_openai_tools_agent,  AgentExecutor
